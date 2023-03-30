@@ -1,0 +1,50 @@
+version: '3.2'
+
+services:
+  php:
+    build: 
+      context: .
+    working_dir: /var/www/
+    ports:
+      - 9000:9000
+    volumes:
+     - ../:/var/www/
+     - ./php/php.ini:/usr/local/etc/php/conf.d/php_conf.ini
+    networks:
+      - yhami-network
+  
+   #Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../:/var/www
+      - ./nginx/:/etc/nginx/conf.d/
+    networks:
+      - yhami-network
+
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    
+    environment:
+      - POSTGRES_USER=$DB_USERNAME
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+      - POSTGRES_DB=$DB_DATABASE
+      - PGUSER=$DB_USERNAME
+      - PGPASSWORD=$DB_PASSWORD
+      - PGDATABASE=$DB_DATABASE
+      - PGDATA=/data/postgres
+    volumes:
+      - ~/.databases/pgsql:/data/postgres
+    networks:
+      - yhami-network
+
+networks:
+ yhami-network:
+    driver: bridge
