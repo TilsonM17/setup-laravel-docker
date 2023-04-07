@@ -11,7 +11,7 @@ services:
      - ../:/var/www/
      - ./php/php.ini:/usr/local/etc/php/conf.d/php_conf.ini
     networks:
-      - yhami-network
+      - network
   
    #Nginx Service
   webserver:
@@ -25,7 +25,7 @@ services:
       - ../:/var/www
       - ./nginx/:/etc/nginx/conf.d/
     networks:
-      - yhami-network
+      - network
 
   db:
     image: postgres
@@ -43,8 +43,8 @@ services:
     volumes:
       - ~/.databases/pgsql:/data/postgres
     networks:
-      - yhami-network
+      - network
 
 networks:
- yhami-network:
+ network:
     driver: bridge
